@@ -85,11 +85,11 @@ if __name__=="__main__":
         wordWarehous.extend(line)
     wordWarehous = set(wordWarehous)
     if os.path.exists(wordWarehousFilename):os.remove(wordWarehousFilename)
-    fd.open(wordWarehousFilename,'a')
+    fd=open(wordWarehousFilename,'a')
     fd.write(json.dumps(list(wordWarehous)))
     del wordWarehous
     fd.close()
 
     sentences = MySentences(train_filename, test_filename)
     model = gensim.models.Word2Vec(sentences, min_count=3, size=100)
-    model.save('./word2vec.model')
+    model.save('./../../model/word2vec.model')
