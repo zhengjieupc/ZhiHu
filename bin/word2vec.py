@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- encoding:utf-8 -*-
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 import requests
-import os,sys,copy,json,re,math,time,copy,random,datetime,types
+import os,copy,json,re,math,time,copy,random,datetime,types
 import gensim
 import datetime
 
