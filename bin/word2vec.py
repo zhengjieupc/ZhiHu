@@ -83,16 +83,17 @@ if __name__=="__main__":
     
     # 生成词库 list
     wordWarehousFilename = "./../../data/wordWarehous.csv"
-    wordWarehous = []
+    wordWarehous = {}
     for line in prase(train_filename, test_filename):
-        wordWarehous.extend(line)
-    wordWarehous = set(wordWarehous)
-    if os.path.exists(wordWarehousFilename):os.remove(wordWarehousFilename)
+        for word in line:
+            wordWarehous.setdefault(word,0)
+            wordWarehous[word] += 1
+    if os.path.exists(wordWarehousFilename): os.remove(wordWarehousFilename)
     fd=open(wordWarehousFilename,'a')
-    fd.write(json.dumps(list(wordWarehous)))
+    fd.write(json.dumps(wordWarehous))
     del wordWarehous
     fd.close()
 
     sentences = MySentences(train_filename, test_filename)
-    model = gensim.models.Word2Vec(sentences, min_count=3, size=100)
+    model = gensim.models.Word2Vec(sentences, min_count=1, size=100)
     model.save('./../../model/word2vec.model')
