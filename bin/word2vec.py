@@ -23,18 +23,15 @@ def prase(trainname, testname):
     f = open(trainname)
     for line in f:
         try:
-            list = json.loads("["+line+"]")
-            id,qid1,qid2,question1,question2,is_duplicate = list
-            if len(list)!=6:raise IndexError
-#            print question1.split()
-#            print question2.split()
-
-            yield question1.split()
-            yield question2.split()
+            data = line.split("\t")
+            if len(data)!=3:raise IndexError
+            question1, question2 = json.loads(data[0]), json.loads(data[1])
+            yield question1
+            yield question2
             count +=1
 
         except IndexError:
-            log_time("index!=6")
+            log_time("index!=3")
             log_time(line)
         except TypeError, e:
             log_time(e)
@@ -49,17 +46,15 @@ def prase(trainname, testname):
     count = 0
     for line in f:
         try:
-            list = json.loads("["+line+"]")
-            id,question1,question2 = list
-            if len(list)!=3:raise IndexError
-#            print question1.split()
-#            print question2.split()
-            yield question1.split()
-            yield question2.split()
+            data = line.split("\t")
+            if len(data)!=2:raise IndexError
+            question1, question2 = json.loads(data[0]), json.loads(data[1])
+            yield question1
+            yield question2
             count +=1
 
         except IndexError:
-            log_time("index!=6")
+            log_time("index!=2")
             log_time(line)
         except TypeError, e:
             log_time(e)
@@ -78,8 +73,8 @@ def log_time(s):
 
 
 if __name__=="__main__":
-    train_filename = "./../../data/train.csv"
-    test_filename = "./../../data/test.csv"
+    train_filename = "./../../data/train_lower.csv"
+    test_filename = "./../../data/test_lower.csv"
     
     # 生成词库 list
     wordWarehousFilename = "./../../data/wordWarehous.csv"
@@ -95,5 +90,5 @@ if __name__=="__main__":
     fd.close()
 
     sentences = MySentences(train_filename, test_filename)
-    model = gensim.models.Word2Vec(sentences, min_count=1, size=100)
+    model = gensim.models.Word2Vec(sentences, min_count=5, window=5, size=50)
     model.save('./../../model/word2vec.model')
